@@ -14,7 +14,7 @@ enum WeatherService: URLRequestConvertible {
     case byName(name: String)
     case byCoordinates(coordinates: CLLocationCoordinate2D)
     
-    var APIKey:String { ""/*Place your openweathermap.org API key here*/ }
+    var APIKey:String { "159de06a1ab0ed81f1a6b67d947847ef" }
     var urlString: String {"https://api.openweathermap.org/data/2.5/weather?"}
 
     var method: HTTPMethod { .get }
@@ -39,11 +39,7 @@ enum WeatherService: URLRequestConvertible {
         
         
         urlRequest.httpMethod = method.rawValue
-        
-        urlRequest = try JSONEncoding.default.encode(urlRequest)
-        
-        print(urlRequest.url?.absoluteString)
-        
+                        
         return urlRequest
     }
     
@@ -56,13 +52,7 @@ enum WeatherService: URLRequestConvertible {
        let urlRequest = URLRequest(url: url)
        return urlRequest
      }
-    func getURLRequest(coordinates: CLLocationCoordinate2D) throws -> URLRequest {
-       let url = try urlString.asURL()
-        let urlRequest = URLRequest(url: url.appendingPathComponent("lat=\(coordinates.latitude)&lon=\(coordinates.longitude)&appid=\(APIKey)"))
-       return urlRequest
-     }
-    
-    
+        
     func addComponents(_ queryItems: [URLQueryItem]) throws -> URLRequest? {
         var urlComponents = URLComponents(string: self.urlString)
         urlComponents?.queryItems = queryItems

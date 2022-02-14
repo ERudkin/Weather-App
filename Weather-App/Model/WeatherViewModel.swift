@@ -7,20 +7,30 @@
 
 import SwiftUI
 import CoreLocation
+import SpriteKit
 public final class WeatherViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var temperature: String = ""
     @Published var Description: String = ""
-    
+    @Published var id: Int = 0
+    @Published var effect: SKScene?
     let weatherManager = WeatherManager()
     @ObservedObject var locationManager = LocationManager()
     
-    //
-    //    init (_ weatherManager: WeatherManager) {
-    //        self.weatherManager = weatherManager
-    //    }
     
-    func loadDataByCity(){
+    
+    func resetSprite(_ id: Int){
+        switch self.id {
+            case 500...531:
+                self.effect = SpriteManager.rainEffect
+            case 600...632:
+                self.effect = SpriteManager.snowEffect
+            default:
+                self.effect = nil
+        }
+    }
+//
+    func loadDataByCity() {
         weatherManager.getWeatherDataByName { weather, errorMsg in
             guard let weather = weather else {
                 return
@@ -30,12 +40,14 @@ public final class WeatherViewModel: ObservableObject {
                 self.name = weather.name
                 self.temperature = String(format: "%.2f", weather.main.temp)
                 self.Description = weather.weather.first?.description ?? ""
+                self.id = weather.weather.first?.id ?? 0
+                self.resetSprite(self.id)
             }
         }
     }
     
     func loadDataByLocation(){
-        weatherManager.coordinates = locationManager.location?.coordinate ?? CLLocationCoordinate2D(latitude: 25.1988, longitude: 55.2796)
+        weatherManager.coordinates = locationManager.location?.coordinate ?? CLLocationCoordinate2D(latitude: 25, longitude: 55)
         weatherManager.getWeatherDataByLocation { weather, errorMsg in
             guard let weather = weather else {
                 return
@@ -44,8 +56,10 @@ public final class WeatherViewModel: ObservableObject {
                 self.name = weather.name
                 self.temperature = String(format: "%.2f", weather.main.temp)
                 self.Description = weather.weather.first?.description ?? ""
+                self.id = weather.weather.first?.id ?? 0
+                self.resetSprite(self.id)
             }
-            
+            print("view id", self.id)
         }
     }
 }
