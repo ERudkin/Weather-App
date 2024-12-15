@@ -14,7 +14,7 @@ enum WeatherService: URLRequestConvertible {
     case byName(name: String)
     case byCoordinates(coordinates: CLLocationCoordinate2D)
     
-    var APIKey:String { "159de06a1ab0ed81f1a6b67d947847ef" }
+    var APIKey:String { "" }
     var urlString: String {"https://api.openweathermap.org/data/2.5/weather?"}
 
     var method: HTTPMethod { .get }
